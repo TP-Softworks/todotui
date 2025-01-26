@@ -114,22 +114,23 @@ class Todo:
         project_root = self.project_root()
         config = self.config(self.global_root())
         use_global = args["--global"]
+        database = self.database(use_global)
         if args["<command>"] == "setup":
             assert project_root is not None, "Setup can only be run within a git project"
-            Setup(self.database(), project_root, config).run(argv)
+            Setup(database, project_root, config).run(argv)
         elif args["<command>"] == "auto":
             assert project_root is not None, "Auto can only be run within a git project"
-            Auto(self.database(), project_root, config).run(argv)
+            Auto(database, project_root, config).run(argv)
         elif args["<command>"] == "add":
-            Add(self.database(), self.root(use_global), config).run(argv)
+            Add(database, self.root(use_global), config).run(argv)
         elif args["<command>"] == "list":
-            List(self.database(), self.root(use_global), config).run(argv)
+            List(database, self.root(use_global), config).run(argv)
         elif args["<command>"] == "update":
-            Update(self.database(), self.root(use_global), config).run(argv)
+            Update(database, self.root(use_global), config).run(argv)
         elif args["<command>"] == "done":
-            Done(self.database(), self.root(use_global), config).run(argv)
+            Done(database, self.root(use_global), config).run(argv)
         elif args["<command>"] == "delete":
-            Delete(self.database(), self.root(use_global), config).run(argv)
+            Delete(database, self.root(use_global), config).run(argv)
         else:
             raise SystemExit(f"Invalid command {args['<command>']}")
 
