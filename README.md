@@ -3,7 +3,9 @@
 ## Description
 
 TODO Tui is a terminal UI for managing TODOs both globally and for a project. It is designed with simplicity in mind and for the use of a single developer on a single machine.
-There is a simple configuration for managing the size of the TODO box and when integrating TODO Tui with `direnv` you can produce an automatic `todo list` whenever you CD into a project. TODO Tui has a handy `todo setup` command for setting up `direnv` for a project.
+
+There is a simple configuration for managing the size of the TODO box and when integrating TODO Tui with `direnv` you can produce an automatic `todo list` whenever you CD into a project.
+TODO Tui has a handy `todo setup` command for setting up `direnv` for a project.
 
 ## Installation
 
@@ -101,7 +103,7 @@ Example:
       tasks:
         title:
           text:
-            align: <  # align title left
+            align: <  # align title text left
 
 Change the title alignment using `title.align`. Values for alignments are center='^', left='<' and right='>'
 
@@ -111,7 +113,7 @@ Example:
       tasks:
         id:
           title:
-            align: <  # align title left
+            align: <  # align id title left
 
 Change the header of a box using `title.text`.
 
