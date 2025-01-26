@@ -16,6 +16,7 @@ from todo.commands.delete import Delete
 from todo.commands.list import List
 from todo.commands.setup import Setup
 from todo.commands.auto import Auto
+from todo.commands.update import Update
 from todo.database.drivers.file import FileDatabaseDriver
 from todo.database import Database
 from todo.types.config import Config
@@ -123,6 +124,8 @@ class Todo:
             Add(self.database(), self.root(use_global), config).run(argv)
         elif args["<command>"] == "list":
             List(self.database(), self.root(use_global), config).run(argv)
+        elif args["<command>"] == "update":
+            Update(self.database(), self.root(use_global), config).run(argv)
         elif args["<command>"] == "done":
             Done(self.database(), self.root(use_global), config).run(argv)
         elif args["<command>"] == "delete":

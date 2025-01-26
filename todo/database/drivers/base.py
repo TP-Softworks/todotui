@@ -19,7 +19,7 @@ class DatabaseDriver:
     def read(self, id: Optional[int]=None) -> list[Task]:
         raise NotImplementedError()
 
-    def update(self, id: int, task: Task) -> Task:
+    def update(self, task: Task) -> Task:
         raise NotImplementedError()
 
     def delete(self, id: int) -> int:

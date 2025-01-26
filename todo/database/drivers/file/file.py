@@ -84,11 +84,11 @@ class FileDatabaseDriver(DatabaseDriver):
             return self.__data.tasks
         return [task for task in self.__data.tasks if task.id == id]
 
-    def update(self, id: int, task: Task) -> Task:
+    def update(self, task: Task) -> Task:
         """Update a task in the database."""
-        self.logger.debug(f"Updating task {id} with {task}")
+        self.logger.debug(f"Updating task {task.id} with {task}")
         for index, t in enumerate(self.__data.tasks):
-            if t.id == id:
+            if t.id == task.id:
                 self.__data.tasks[index] = task
                 break
         self.__write()
