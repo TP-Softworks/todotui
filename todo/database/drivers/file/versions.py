@@ -14,7 +14,9 @@ class Base:
     version: str = "Unknown"
     matcher = None
     splitter = re.compile(r"(?<!\\),")
-    tasks: list[Task] = []
+
+    def __init__(self):
+        self.tasks: list[Task] = []
 
     def migrate(self, from_db: "Base") -> "Base":
         """Migrate database from an earlier database version."""
@@ -143,4 +145,4 @@ class Data(v0_0_2):
     """Latest version."""
 
 
-MIGRATION_PATH = (v0_0_1(), v0_0_2())
+MIGRATION_PATH = (v0_0_1, v0_0_2)
