@@ -22,18 +22,3 @@ class Task(BaseModel):
     status: Status = Status.Open
     completed_at: Optional[str] = None
     auto: bool = False  # Was automatically added
-
-    @classmethod
-    def from_args(cls, data: dict) -> "Task":
-        LOGGER.debug(f"Creating a task from arguments: {data}")
-        return Task(
-            title=cls.escape(data.get("<title>")),  # type: ignore
-        )
-
-    @classmethod
-    def escape(cls, data: str) -> str:
-        return data.replace(",", r"\,")
-
-    @classmethod
-    def unescape(cls, data: str) -> str:
-        return data.replace(r"\,", ",")

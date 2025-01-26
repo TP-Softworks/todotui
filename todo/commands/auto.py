@@ -33,7 +33,7 @@ class Auto(Command):
             string = string.split(self.todo_string)[1].strip()
             title = f"{filename}:{string}"
             if title not in saved_todos:
-                self.database.create(Task(title=Task.escape(title)))
+                self.database.create(Task(title=title))
                 created.append(title)
         if created:
             print(f"Created {len(created)} new tasks")

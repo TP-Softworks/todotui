@@ -22,6 +22,6 @@ class Add(Command):
     def run(self, argv: list[str]):
         args = self.parse_args(argv)
         self.logger.info("Adding a new task")
-        task_id = self.database.create(Task.from_args(args))
+        task_id = self.database.create(Task(title=args["<title>"]))
         self.logger.info(f"Task created: {task_id}")
         print(f"Created task with id: {task_id}")

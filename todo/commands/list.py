@@ -55,7 +55,7 @@ class List(Command):
 
     def task_text(self, task: Task) -> str:
         return f"| {str(task.id)[:self.format.tasks.id.width]:{self.format.tasks.id.text.align.value}{self.format.tasks.id.width}} | " \
-               f"{Task.unescape(task.title[:self.format.tasks.title.width]):{self.format.tasks.title.text.align.value}{self.format.tasks.title.width}} | " \
+               f"{task.title[:self.format.tasks.title.width]:{self.format.tasks.title.text.align.value}{self.format.tasks.title.width}} | " \
                f"{task.created_at[:self.format.tasks.created_at.width]:{self.format.tasks.created_at.text.align.value}{self.format.tasks.created_at.width}} | " \
                f"{'✅' if task.status==Status.Done else '❌':{self.format.tasks.completed.text.align.value}{self.format.tasks.completed.width}}|" \
 
