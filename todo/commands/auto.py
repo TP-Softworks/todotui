@@ -21,11 +21,14 @@ class Auto(Command):
     todo_string = "todo:".upper()
 
     def run(self, argv: list[str]):
+        # TODO: Add a docstring to this method
         assert self.project_root is not None, "Not in a git project directory"
         _ = self.parse_args(argv)
         self.logger.info(f"Automatically populating task list for project: {self.project_root}")
         todos = run(["git", "grep", "--untracked", self.todo_string], capture_output=True, text=True)
-        assert todos.returncode == 0, f"Failed to get todos: {todos.stderr}"
+        if todos.returncode:
+            print(f"Found no TODOS in project {self.project_root}")
+            return
         saved_todos = [t.title for t in self.database.read()]
         created = []
         for todo in todos.stdout.splitlines():

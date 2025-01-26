@@ -32,5 +32,5 @@ class Done(Command):
             return
         task.status = Status.Done
         assert task.id, "Task id is not set"
-        self.database.update(task.id, task)
+        self.database.update(task)
         print(f"Task with id {task_id} completed")
