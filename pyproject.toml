@@ -6,17 +6,15 @@ authors = [
 	{ name = "Tobias Persson" , email = "tobias.persson@tp-softworks.se"}
 ]
 license = { text = "MIT" }
-# TODO: Use specific versions
-dependencies = ["docopt", "pyyaml", "pydantic"]
+dependencies = ["docopt==0.6.2", "pyyaml==6.0.2", "pydantic==2.10.6"]
 dynamic = ["version"]
 
 [build-system]
-# requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
-requires = ["setuptools>=45", "wheel"]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
 build-backend = 'setuptools.build_meta'
 
-# [tool.setuptools_scm]
-# write_to = "todo/_version.py"
+[tool.setuptools_scm]
+write_to = "todo/_version.py"
 
 [tool.setuptools.packages.find]
 
