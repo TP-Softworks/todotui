@@ -2,19 +2,23 @@
 # 
 # See LICENSE for details.
 from typing import Optional
+from todo.database.drivers import DatabaseDriver
 from todo.types.task import Task
 
 
 class Database:
 
+    def __init__(self, driver: DatabaseDriver):
+        self.driver = driver
+
     def create(self, data: Task) -> int:
-        raise NotImplementedError()
+        return self.driver.create(data)
 
     def read(self, id: Optional[int]=None) -> list[Task]:
-        raise NotImplementedError()
+        return self.driver.read(id)
 
     def update(self, id: int, data: Task) -> Task:
-        raise NotImplementedError()
+        return self.driver.update(id, data)
 
     def delete(self, id: int) -> int:
-        raise NotImplementedError()
+        return self.driver.delete(id)

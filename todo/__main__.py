@@ -16,7 +16,8 @@ from todo.commands.delete import Delete
 from todo.commands.list import List
 from todo.commands.setup import Setup
 from todo.commands.auto import Auto
-from todo.database.file import FileDatabase
+from todo.database.drivers.file import FileDatabaseDriver
+from todo.database import Database
 from todo.types.config import Config
 
 
@@ -55,6 +56,7 @@ class Todo:
     """
 
     logger = logging.getLogger(__name__)
+    __project_root = None
 
     def parse_args(self, argv: list[str]) -> dict:
         """Parse command line arguments."""
@@ -62,14 +64,30 @@ class Todo:
         assert self.__doc__, 'You must define a docstring for the Todo class'
         return docopt(self.__doc__, argv=argv, version='Todo 1.0')
 
-    def project_root(self) -> Optional[Path]:
+    def project_root(self, use_global: bool=False) -> Optional[Path]:
         """Project root directory."""
-        response = run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
-        if response.returncode == 0:
-            return Path(response.stdout.strip())
-        return None
+        if use_global:
+            return None
+        if self.__project_root is None:
+            response = run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
+            if response.returncode == 0:
+                return Path(response.stdout.strip())
+        return self.__project_root
+
+    def global_root(self) -> Path:
+        """Global root directory."""
+        global_root = Path.home().joinpath(".local/state/todotui")
+        global_root.mkdir(parents=True, exist_ok=True)
+        return global_root
+
+    def root(self, use_global: bool=False) -> Path:
+        """Current root directory based on cwd and flags."""
+        if use_global:
+            return self.global_root()
+        return self.project_root() or self.global_root()
 
     def config(self, global_root: Path) -> Config:
+        """Load the configuration for todotui."""
         config = global_root.joinpath("config.yaml")
         if not config.exists():
             try:
@@ -81,38 +99,36 @@ class Todo:
         with config.open("r") as f:
             return Config.model_validate(safe_load(f))
 
+    def database(self, use_global: bool=False) -> Database:
+        """Return the current database, global or local."""
+        return Database(FileDatabaseDriver(self.root(use_global)))
+
     def run(self, argv: list[str]):
         """Run the Todo application"""
         self.logger.debug("Running the Todo application")
         args = self.parse_args(argv)
+        setup_logging(args["-v"])
 
-        project_root = self.project_root()
-        global_root = Path.home().joinpath(".local/state/todo")
-        global_root.mkdir(parents=True, exist_ok=True)
-        local_db = None
-        if project_root is not None and not args["--global"]:
-            local_db = FileDatabase(project_root.joinpath(".todo.db"))
-        global_db = FileDatabase(global_root.joinpath("todo.db"))
-        if args["--global"]:
-            project_root = None
-
-        config = self.config(global_root)
-        commands = {
-            "add": Add(local_db or global_db, project_root if project_root else global_root, config),
-            "list": List(local_db or global_db, project_root if project_root else global_root, config),
-            "done": Done(local_db or global_db, project_root if project_root else global_root, config),
-            "delete": Delete(local_db or global_db, project_root if project_root else global_root, config),
-
-            "setup": Setup(local_db, project_root, config),
-            "auto": Auto(local_db, project_root, config),
-        }
-        setup_logging(verbosity=args["-v"])
         self.logger.debug(f"Running command: {args['<command>']}")
-
-        command = commands.get(args["<command>"])
-        assert command, f'Invalid command: {args["<command>"]}'
-        command.run(argv)
-
+        project_root = self.project_root()
+        config = self.config(self.global_root())
+        use_global = args["--global"]
+        if args["<command>"] == "setup":
+            assert project_root is not None, "Setup can only be run within a git project"
+            Setup(self.database(), project_root, config).run(argv)
+        elif args["<command>"] == "auto":
+            assert project_root is not None, "Auto can only be run within a git project"
+            Auto(self.database(), project_root, config).run(argv)
+        elif args["<command>"] == "add":
+            Add(self.database(), self.root(use_global), config).run(argv)
+        elif args["<command>"] == "list":
+            List(self.database(), self.root(use_global), config).run(argv)
+        elif args["<command>"] == "done":
+            Done(self.database(), self.root(use_global), config).run(argv)
+        elif args["<command>"] == "delete":
+            Delete(self.database(), self.root(use_global), config).run(argv)
+        else:
+            raise SystemExit(f"Invalid command {args['<command>']}")
 
 def main():
     """Main entrypoint."""

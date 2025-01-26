@@ -6,7 +6,8 @@ authors = [
 	{ name = "Tobias Persson" , email = "tobias.persson@tp-softworks.se"}
 ]
 license = { text = "MIT" }
-dependencies = ["docopt"]
+# TODO: Use specific versions
+dependencies = ["docopt", "pyyaml", "pydantic"]
 dynamic = ["version"]
 
 [build-system]

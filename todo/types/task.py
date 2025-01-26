@@ -20,6 +20,8 @@ class Task(BaseModel):
     title: str
     created_at: str = datetime.now().strftime("%d/%m %H:%M")
     status: Status = Status.Open
+    completed_at: Optional[str] = None
+    auto: bool = False  # Was automatically added
 
     @classmethod
     def from_args(cls, data: dict) -> "Task":
