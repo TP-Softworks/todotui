@@ -1,0 +1,23 @@
+[project]
+name = "todo"
+description = "Tui for managing todo lists"
+readme = "README.md"
+authors = [
+	{ name = "Tobias Persson" , email = "tobias.persson@tp-softworks.se"}
+]
+license = { text = "MIT" }
+dependencies = ["docopt"]
+dynamic = ["version"]
+
+[build-system]
+# requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+requires = ["setuptools>=45", "wheel"]
+build-backend = 'setuptools.build_meta'
+
+# [tool.setuptools_scm]
+# write_to = "todo/_version.py"
+
+[tool.setuptools.packages.find]
+
+[project.scripts]
+todo = "todo:main"
